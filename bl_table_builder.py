@@ -86,7 +86,7 @@ def print_season_statistics(header, season_data):
     away_goals_avg = statistics['away_goals'] / statistics['total_games']
     home_goals_avg = statistics['home_goals'] / statistics['total_games']
 
-    perform = '{:.1f} goals per game, 2scored: {:.1f}%, '.format(goals_avg, both_scored_pt)
+    perform = '{:.1f} goals per game, both scored: {:.1f}%, '.format(goals_avg, both_scored_pt)
 
     totals = '1.5+:{:.1f}%, 2.5+:{:.1f}% hAvgGoals:{:.1f}, gAvgGoals:{:.1f}'.format(total15_pt, total25_pt,
                                                                                     home_goals_avg, away_goals_avg)
@@ -137,7 +137,9 @@ def print_season_table(title, season_data):
 
         table_data.append(table_row)
 
-    table_data.sort(key = lambda x: x[table_header.index('Punkte')], reverse = True)
+    table_data.sort(key=lambda x: int(x[table_header.index('TD')]), reverse=True) # sort on secondary key
+    table_data.sort(key = lambda x: x[table_header.index('Punkte')], reverse = True) # sort on primary key
+
     for idx, table_row in enumerate(table_data):
         table_row[table_header.index('Platz')] = ' ' + '{:>3}'.format(str(idx+1)) + '  '
 
