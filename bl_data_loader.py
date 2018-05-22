@@ -1,15 +1,32 @@
 from urllib.request import urlopen
 import os
 
-def load_data():
-    loadfile("http://www.football-data.co.uk/mmz4281/1718/D1.csv")
-    loadfile("http://www.football-data.co.uk/mmz4281/1718/D2.csv")
 
-    
-def loadfile(url):
+def load_data(verbose=False, loadAll=False):
+
+    if loadAll:
+        years = list(range(93, 100)) + list(range(0, 19))
+    else:
+        years = [17, 18]
+
+    prev_year = ''
+    for year in years:
+        if not prev_year:
+            prev_year = year
+            continue
+        url_b1 = 'http://www.football-data.co.uk/mmz4281/{0:02d}{1:02d}/D1.csv'.format(prev_year, year)
+        loadfile(url_b1)
+
+        url_b2 = 'http://www.football-data.co.uk/mmz4281/{0:02d}{1:02d}/D2.csv'.format(prev_year, year)
+        loadfile(url_b2)
+        prev_year = year
+
+
+def loadfile(url, verbose=False):
     u = urlopen(url)
 
-    data_directory = "./data/"
+    season = url.split('/')[-2]
+    data_directory = "./data/" + season + '/'
     if not os.path.exists(data_directory):
         os.makedirs(data_directory)
 
@@ -24,7 +41,8 @@ def loadfile(url):
     remote_file_size = int(u.getheader('Content-Length'))
 
     if file_size == remote_file_size:
-        print('Data file {} is up to date'.format(file_name))
+        if verbose:
+            print('Data file {} is up to date'.format(file_name))
 
     else:
         f = open(file_name, 'wb')
