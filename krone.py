@@ -36,7 +36,7 @@ def calculate_season_statistics(season_data):
 
 def open_db():
     import mysql.connector
-    cnx = mysql.connector.connect(user='alex', password='weronika',
+    cnx = mysql.connector.connect(user='alex', password='abba',
                                   host='127.0.0.1',
                                   database='krone')
 
