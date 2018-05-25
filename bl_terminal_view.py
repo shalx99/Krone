@@ -1,5 +1,6 @@
 from terminaltables import AsciiTable
 
+
 def show_season_statistics(header, statistics):
 
     home_wins_pt = statistics['home_wins'] * 100 / statistics['total_games']
@@ -26,8 +27,9 @@ def show_season_statistics(header, statistics):
     print(perform + totals)
     print('')
 
+
 def calculate_season_outcomes(team, season_data):
-    ''' returns team season results in form WWLDW '''
+    """ returns team season results in form WWLDW """
     outcomes = ''
     all_team_games = [game for game in season_data if game['HomeTeam'] == team or game['AwayTeam'] == team and game['FTAG']]
 
@@ -50,6 +52,7 @@ def calculate_season_outcomes(team, season_data):
 
     return outcomes
 
+
 def show_season_table(title, season_data):
     table_data = []
     table_header = ['Platz', 'Club', 'Spiele', ' S ', ' U ', ' N ', 'Tore', 'TD', 'Punkte', 'Form']
@@ -64,7 +67,7 @@ def show_season_table(title, season_data):
         away_team_games = [game for game in season_data if game['AwayTeam'] == team and game['FTHG'] and game['FTAG']]
         all_team_games = [game for game in season_data if game['HomeTeam'] == team or game['AwayTeam'] == team and game['FTAG']]
 
-        #home games
+        # home games
         win  = sum(1 for game in home_team_games if int(game['FTHG']) > int(game['FTAG']))
         lose = sum(1 for game in home_team_games if int(game['FTHG']) < int(game['FTAG']))
         draw = sum(1 for game in home_team_games if int(game['FTHG']) == int(game['FTAG']))
@@ -72,7 +75,7 @@ def show_season_table(title, season_data):
         conceded = sum(int(game['FTAG']) for game in home_team_games)
         form = calculate_season_outcomes(team, season_data)
 
-        #away games
+        # away games
         win  += sum(1 for game in away_team_games if int(game['FTHG']) < int(game['FTAG']))
         lose += sum(1 for game in away_team_games if int(game['FTHG']) > int(game['FTAG']))
         draw += sum(1 for game in away_team_games if int(game['FTHG']) == int(game['FTAG']))
@@ -100,4 +103,4 @@ def show_season_table(title, season_data):
 
     table_data.insert(0, table_header)
     table = AsciiTable(table_data, title)
-    print (table.table)
+    print(table.table)

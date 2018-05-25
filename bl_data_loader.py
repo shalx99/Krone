@@ -2,9 +2,9 @@ from urllib.request import urlopen
 import os
 
 
-def load_data(verbose=False, loadAll=False):
+def load_data(load_all=False):
 
-    if loadAll:
+    if load_all:
         years = list(range(93, 100)) + list(range(0, 19))
     else:
         years = [17, 18]
