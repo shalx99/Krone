@@ -1,7 +1,7 @@
 import csv
 from bl_data_loader import load_data
 from bl_terminal_view import show_season_statistics, show_season_table
-from bl_collector import all_teams
+from bl_teams_sql import make_teams_sql_table
 
 
 def csv_to_list(file_path):
@@ -36,27 +36,10 @@ def calculate_season_statistics(season_data):
     return statistics
 
 
-def open_db():
-    import mysql.connector
-    cnx = mysql.connector.connect(user='alex', password='abba',
-                                  host='127.0.0.1',
-                                  database='krone')
-
-    try:
-        cursor = cnx.cursor()
-        cursor.execute("""
-          select name from example
-       """)
-        result = cursor.fetchall()
-        print(result)
-    finally:
-        cnx.close()
-
-
 # load_data()
-# open_db()
 
-print("   ".join(all_teams()))
+
+make_teams_sql_table(verbose=True)
 
 # title = '2017/2018 B1'
 # season_b1_17 = csv_to_list('./data/1718/D1.csv')
