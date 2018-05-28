@@ -2,6 +2,7 @@ import csv
 from bl_data_loader import load_data
 from bl_terminal_view import show_season_statistics, show_season_table
 from bl_teams_sql import make_teams_sql_table
+import argparse
 
 
 def csv_to_list(file_path):
@@ -36,10 +37,20 @@ def calculate_season_statistics(season_data):
     return statistics
 
 
-# load_data()
+if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser(description="krone project",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-l', '--loadData', required=False, help="Load data from Net", default=False)
+    parser.add_argument('-db', '--buildDB', required=False, help="Create SQL database", default=True)
 
-make_teams_sql_table(verbose=True)
+    args = parser.parse_args()
+
+    if args.loadData:
+        load_data()
+
+    if args.buildDB:
+        make_teams_sql_table(verbose=True)
 
 # title = '2017/2018 B1'
 # season_b1_17 = csv_to_list('./data/1718/D1.csv')

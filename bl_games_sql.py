@@ -98,7 +98,7 @@ def add_manual_data(teams):
     return updated_teams
 
 
-def make_teams_sql_table(verbose=False):
+def make_games_sql_table(verbose=False):
     teams = all_teams(verbose)
 
     if verbose:
