@@ -1,5 +1,6 @@
 from urllib.request import urlopen
 import os
+import csv
 
 
 def load_data(load_all=False):
@@ -61,3 +62,33 @@ def loadfile(url, verbose=False):
         f.close()
 
     return file_name
+
+
+def csv_to_list(file_path):
+
+    season_data = list()
+    with open(file_path, encoding='iso-8859-15') as f:
+        reader = csv.DictReader(f)
+
+        for line in reader:
+            season_data.append(line)
+
+    return season_data
+
+
+def data_files(verbose=False):
+    years = list(range(93, 100)) + list(range(0, 19))
+    files = list()
+    prev_year = 0
+    for year in years:
+        if not prev_year:
+            prev_year = year
+            continue
+        files.append('./data/{0:02d}{1:02d}/D1.csv'.format(prev_year, year))
+        files.append('./data/{0:02d}{1:02d}/D2.csv'.format(prev_year, year))
+        prev_year = year
+
+    if verbose:
+        print('Files to scan: {0}'.format(len(files)))
+
+    return files

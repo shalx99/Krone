@@ -1,25 +1,13 @@
 
 import sqlite3
-import csv
-
-
-def csv_to_list(file_path):
-
-    season_data = list()
-    with open(file_path, encoding='iso-8859-15') as f:
-        reader = csv.DictReader(f)
-
-        for line in reader:
-            season_data.append(line)
-
-    return season_data
+from bl_data_loader import csv_to_list
 
 
 def all_teams(verbose=False):
     teams = set()
     years = list(range(93, 100)) + list(range(0, 19))
     files = list()
-    prev_year = ''
+    prev_year = 0
     for year in years:
         if not prev_year:
             prev_year = year
@@ -65,37 +53,6 @@ def create_teams_table(teams):
 
     connection.commit()
     connection.close()
-
-
-def add_manual_data(teams):
-    updated_teams = list()
-    for team in teams:
-        if team=='Dortmund': team_data=(team, 'Borussia Dortmund', 'BVB')
-        elif team == 'Leverkusen': team_data=(team, 'Bayer Leverkusen', 'B04')
-        elif team == 'Schalke': team_data=(team, 'Schalke 04','S04')
-        elif team == 'Hertha': team_data=(team, 'Hertha BSC','BSC')
-        elif team == 'Werder': team_data=(team, 'Werder Bremen',"SVW")
-        elif team == 'Bayern': team_data=(team,  'Bayern Munich',"FCB")
-        elif team == 'Wolfsburg': team_data=(team,  'VfL Wolfsburg', "WOB")
-        elif team == 'Hoffenheim': team_data=(team,  '1899 Hoffenheim', "TSG")
-        elif team == 'Hamburg': team_data=(team,  'Hamburger SV', "HSV")
-        elif team == 'Darmstadt': team_data=(team,  '', "D98")
-        elif team == 'Leipzig': team_data=(team,  'RB Leipzig', "RBL")
-        elif team == 'Ingolstadt': team_data=(team,  '', "FCI")
-        elif team == "M'gladbach": team_data=(team,  'Borussia Mönchengladbach', "BMG")
-        elif team == 'Freiburg': team_data=(team,  'SC Freiburg', "SCF")
-        elif team == 'Frankfurt': team_data=(team,  'Eintracht Frankfurt', "SGE")
-        elif team == 'Augsburg': team_data=(team,  'FC Augsburg', "FCA")
-        elif team == 'Koln': team_data=(team,  '1. FC Köln', "KOE")
-        elif team == 'Mainz': team_data=(team,  'Mainz 05', "M05")
-        elif team == 'Stuttgart': team_data = (team, 'VfB Stuttgart', "VFB")
-        elif team == 'Hannover': team_data = (team, 'Hannover 96', "H96")
-
-        else: team_data = (team, '', '')
-
-        updated_teams.append(team_data)
-
-    return updated_teams
 
 
 def make_games_sql_table(verbose=False):

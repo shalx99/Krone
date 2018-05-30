@@ -1,39 +1,19 @@
 
 import sqlite3
-import csv
+from bl_data_loader import csv_to_list, data_files
 
 
-def csv_to_list(file_path):
-
-    season_data = list()
-    with open(file_path, encoding='iso-8859-15') as f:
-        reader = csv.DictReader(f)
-
-        for line in reader:
-            season_data.append(line)
-
-    return season_data
+def team_id(team):
+    return team.strip().lower()
 
 
 def all_teams(verbose=False):
+
     teams = set()
-    years = list(range(93, 100)) + list(range(0, 19))
-    files = list()
-    prev_year = ''
-    for year in years:
-        if not prev_year:
-            prev_year = year
-            continue
-        files.append('./data/{0:02d}{1:02d}/D1.csv'.format(prev_year, year))
-        files.append('./data/{0:02d}{1:02d}/D2.csv'.format(prev_year, year))
-        prev_year = year
-
-    if verbose:
-        print('Files to scan: {0}'.format(len(files)))
-
+    files = data_files()
     for file in files:
         season = csv_to_list(file)
-        teams = teams.union(set([game['HomeTeam'].strip().lower() for game in season]))
+        teams = teams.union( set([team_id(game['HomeTeam']) for game in season]))
 
     # clean-up empty string
     teams = filter(None, teams)
