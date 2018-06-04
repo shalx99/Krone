@@ -2,8 +2,10 @@ import csv
 from bl_data_loader import load_data
 from bl_terminal_view import show_season_statistics, show_season_table
 from bl_teams_sql import make_teams_sql_table
+from bl_games_sql import make_games_sql_table
 import argparse
 
+from subprocess import call
 
 def csv_to_list(file_path):
 
@@ -46,11 +48,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    call(['rm', 'bundesliga.db'])
+    call(['sqlite3', 'bundesliga.db', '-init', 'create_tables.sql', ".exit"])
+
     if args.loadData:
-        load_data()
+        load_data(load_all=True)
 
     if args.buildDB:
-        make_teams_sql_table(verbose=True)
+        make_teams_sql_table(verbose=False)
+        make_games_sql_table(verbose=True)
 
 # title = '2017/2018 B1'
 # season_b1_17 = csv_to_list('./data/1718/D1.csv')

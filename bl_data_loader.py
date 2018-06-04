@@ -10,16 +10,18 @@ def load_data(load_all=False):
     else:
         years = [17, 18]
 
+    years = ['{0:02d}'.format(year) for year in years]
+
     prev_year = ''
     for year in years:
         if not prev_year:
             prev_year = year
             continue
-        url_b1 = 'http://www.football-data.co.uk/mmz4281/{0:02d}{1:02d}/D1.csv'.format(prev_year, year)
+        url_b1 = 'http://www.football-data.co.uk/mmz4281/{0}{1}/D1.csv'.format(prev_year, year)
         loadfile(url_b1)
 
-        url_b2 = 'http://www.football-data.co.uk/mmz4281/{0:02d}{1:02d}/D2.csv'.format(prev_year, year)
-        loadfile(url_b2)
+        url_b2 = 'http://www.football-data.co.uk/mmz4281/{0}{1}/D2.csv'.format(prev_year, year)
+        loadfile(url_b2, verbose=True)
         prev_year = year
 
 
@@ -78,14 +80,16 @@ def csv_to_list(file_path):
 
 def data_files(verbose=False):
     years = list(range(93, 100)) + list(range(0, 19))
+    years = ['{0:02d}'.format(year) for year in years]
+
     files = list()
-    prev_year = 0
+    prev_year = ''
     for year in years:
         if not prev_year:
             prev_year = year
             continue
-        files.append('./data/{0:02d}{1:02d}/D1.csv'.format(prev_year, year))
-        files.append('./data/{0:02d}{1:02d}/D2.csv'.format(prev_year, year))
+        files.append('./data/{0}{1}/D1.csv'.format(prev_year, year))
+        files.append('./data/{0}{1}/D2.csv'.format(prev_year, year))
         prev_year = year
 
     if verbose:

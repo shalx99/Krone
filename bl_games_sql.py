@@ -1,54 +1,50 @@
 
 import sqlite3
-from bl_data_loader import csv_to_list
+from bl_data_loader import csv_to_list, data_files
+from bl_teams_sql import team_id
 
 
-def all_teams(verbose=False):
-    teams = set()
-    years = list(range(93, 100)) + list(range(0, 19))
-    files = list()
-    prev_year = 0
-    for year in years:
-        if not prev_year:
-            prev_year = year
-            continue
-        files.append('./data/{0:02d}{1:02d}/D1.csv'.format(prev_year, year))
-        files.append('./data/{0:02d}{1:02d}/D2.csv'.format(prev_year, year))
-        prev_year = year
+def all_games(verbose=False):
+
+    games = list()
+    files = data_files()
 
     if verbose:
-        print('Files to scan: {0}'.format(len(files)))
+        print(len(files))
+        print(" \n".join(files))
 
     for file in files:
         season = csv_to_list(file)
         for game in season:
-            teams.add(game['HomeTeam'])
-            teams.add(game['AwayTeam'])
+            home_shots = ''
+            away_shots = ''
+            home_shots_target = ''
+            away_shots_target = ''
+            if 'HS' in game: home_shots = game['HS']
+            if 'AS' in game: away_shots = game['AS']
+            if 'HST' in game: home_shots_target = game['HST']
+            if 'AST' in game: away_shots_target = game['AST']
+            games.append((game['Div'], game['Date'], team_id(game['HomeTeam']), team_id(game['AwayTeam']),
+                          game['FTHG'], game['FTAG'], game['FTR'], home_shots, away_shots, home_shots_target, away_shots_target))
 
     # clean-up empty string
-    teams = filter(None, teams)
+    games = [game for game in games if game[0]]
 
-    return list(teams)
+    return games
 
 
-def create_teams_table(teams):
+def create_games_table(games):
+
+    print ('total games number: {}'.format(len(games)) )
     connection = sqlite3.connect("bundesliga.db")
     cursor = connection.cursor()
 
-    # delete
-    cursor.execute("""DROP TABLE teams;""")
+    for game in games:
+        sql_command = """INSERT INTO games (id, div, date, home_team, away_team, home_team_goals, away_team_goals, full_time_result, ht_shots, at_shots, ht_shots_target, at_shots_target) 
+            VALUES (NULL, "{div}", "{date}", "{home_team}", "{away_team}", {home_team_goals}, {away_team_goals}, "{full_time_result}", "{home_s}", "{away_s}","{hst}","{ast}"); """\
+            .format(div=game[0], date=game[1], home_team=game[2], away_team=game[3], home_team_goals=int(game[4]), away_team_goals=int(game[5]), full_time_result=game[6],
+                    home_s=game[7], away_s=game[8], hst=game[9], ast=game[10])
 
-    create_table_command = ("        CREATE TABLE teams ( \n"
-                            "        id INTEGER PRIMARY KEY, \n"
-                            "        name VARCHAR(30),\n"
-                            "        full_name VARCHAR(70),\n"
-                            "        short_name VARCHAR(3));")
-
-    cursor.execute(create_table_command)
-
-    for team in teams:
-        sql_command = """INSERT INTO teams (id, name, full_name, short_name) VALUES (NULL, "{name}", "{full_name}", "{short_name}"); """\
-            .format(name=team[0], full_name=team[1], short_name=team[2])
         cursor.execute(sql_command)
 
     connection.commit()
@@ -56,11 +52,5 @@ def create_teams_table(teams):
 
 
 def make_games_sql_table(verbose=False):
-    teams = all_teams(verbose)
-
-    if verbose:
-        print('Total number of teams: {0}'.format(len(teams)))
-        print(" \n".join(teams))
-
-    updated_teams = add_manual_data(teams)
-    create_teams_table(updated_teams)
+    games = all_games(verbose=False)
+    create_games_table(games)

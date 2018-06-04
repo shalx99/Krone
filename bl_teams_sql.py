@@ -27,15 +27,15 @@ def create_teams_table(teams):
     cursor = connection.cursor()
 
     # delete
-    cursor.execute("""DROP TABLE teams;""")
-
-    create_table_command = ("        CREATE TABLE teams ( \n"
-                            "        id INTEGER PRIMARY KEY, \n"
-                            "        name VARCHAR(30),\n"
-                            "        full_name VARCHAR(70),\n"
-                            "        short_name VARCHAR(3));")
-
-    cursor.execute(create_table_command)
+    # cursor.execute("""DROP TABLE IF EXISTS teams;""")
+    #
+    # create_table_command = ("        CREATE TABLE IF NOT EXISTS teams ( \n"
+    #                         "        id INTEGER PRIMARY KEY, \n"
+    #                         "        name VARCHAR(30) NOT NULL,\n"
+    #                         "        full_name VARCHAR(70),\n"
+    #                         "        short_name VARCHAR(3));")
+    #
+    # cursor.execute(create_table_command)
 
     for team in teams:
         sql_command = """INSERT INTO teams (id, name, full_name, short_name) VALUES (NULL, "{name}", "{full_name}", "{short_name}"); """\
@@ -49,7 +49,7 @@ def create_teams_table(teams):
 def add_manual_data(teams):
     updated_teams = list()
     for team in teams:
-        if team=='dortmund': team_data=(team, 'Borussia Dortmund', 'BVB')
+        if team =='dortmund': team_data=(team, 'Borussia Dortmund', 'BVB')
         elif team == 'leverkusen': team_data=(team, 'Bayer Leverkusen', 'B04')
         elif team == 'schalke': team_data=(team, 'Schalke 04','S04')
         elif team == 'hertha': team_data=(team, 'Hertha BSC','BSC')
