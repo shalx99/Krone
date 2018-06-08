@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS games (
     ht_shots INTEGER,
     at_shots INTEGER,
     ht_shots_target INTEGER,
-    at_shots_target INTEGER
+    at_shots_target INTEGER,
+    ht_corners INTEGER,
+    at_corners INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS teams (

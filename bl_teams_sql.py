@@ -26,17 +26,6 @@ def create_teams_table(teams):
     connection = sqlite3.connect("bundesliga.db")
     cursor = connection.cursor()
 
-    # delete
-    # cursor.execute("""DROP TABLE IF EXISTS teams;""")
-    #
-    # create_table_command = ("        CREATE TABLE IF NOT EXISTS teams ( \n"
-    #                         "        id INTEGER PRIMARY KEY, \n"
-    #                         "        name VARCHAR(30) NOT NULL,\n"
-    #                         "        full_name VARCHAR(70),\n"
-    #                         "        short_name VARCHAR(3));")
-    #
-    # cursor.execute(create_table_command)
-
     for team in teams:
         sql_command = """INSERT INTO teams (id, name, full_name, short_name) VALUES (NULL, "{name}", "{full_name}", "{short_name}"); """\
             .format(name=team[0], full_name=team[1], short_name=team[2])

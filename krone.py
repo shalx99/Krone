@@ -13,9 +13,6 @@ def csv_to_list(file_path):
     with open(file_path) as csvfile:
         d_reader = csv.DictReader(csvfile)
 
-        # get fieldnames from DictReader object and store in list
-        # headers = d_reader.fieldnames
-
         for line in d_reader:
             season_data.append(line)
 
